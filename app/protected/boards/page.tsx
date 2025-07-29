@@ -31,12 +31,13 @@ export default function BoardsPage() {
       const boardsData = await kanbanAPI.getBoards();
       setBoards(boardsData);
       console.log('Loaded boards:', boardsData.length, 'boards');
-    } catch (error) {
-      console.error('Failed to load boards:', error);
-      alert(`ボード読み込みエラー: ${error.message}`);
-    } finally {
-      setIsLoading(false);
-    }
+  } catch (error) {
+  console.error('Failed to load boards:', error);
+  const message = error instanceof Error ? error.message : String(error);
+  alert(`ボード読み込みエラー: ${message}`);
+  } finally {
+  setIsLoading(false);
+  }
   }, [kanbanAPI]);
 
   useEffect(() => {
