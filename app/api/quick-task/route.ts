@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     console.log('Quick task API called');
     const supabase = await createClient();
-    
+
     // 認証チェック
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     console.log('User:', user?.id, 'Auth error:', authError);
@@ -30,11 +30,12 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-  console.error('Quick task creation error:', error);
-  // errorがErrorインスタンスか確認してからmessageを取得する
-  const details = error instanceof Error ? error.message : 'Unknown error';
-  return NextResponse.json(
-    { error: 'Failed to create task', details },
-    { status: 500 }
-  );
+    console.error('Quick task creation error:', error);
+    // errorがErrorインスタンスか確認してからmessageを取得する
+    const details = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json(
+      { error: 'Failed to create task', details },
+      { status: 500 }
+    );
+  }
 }
