@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lsof:*)",
+      "Bash(PORT=3001 npm run dev)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(npx next dev:*)",
+      "Bash(telnet:*)",
+      "Bash(nc:*)",
+      "Bash(sudo pfctl:*)",
+      "Bash(npx tsc:*)"
+    ],
+    "deny": []
+  }
+}
