@@ -128,7 +128,7 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
 
   if (tasks.length === 0) {
     return (
-      <Card className="w-full bg-white border-0 rounded-2xl shadow-lg h-[600px] flex flex-col">
+      <Card className="w-full bg-white border-0 rounded-2xl shadow-lg min-h-[600px] flex flex-col">
         <CardHeader className="pb-4 flex-shrink-0">
           <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
@@ -150,7 +150,7 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
   }
 
   return (
-    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg h-[600px] flex flex-col">
+    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg min-h-[600px] flex flex-col">
       <CardHeader className="pb-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">

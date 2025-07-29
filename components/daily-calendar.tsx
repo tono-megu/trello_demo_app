@@ -268,7 +268,7 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
   };
 
   return (
-    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg h-[600px] flex flex-col">
+    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg min-h-[600px] flex flex-col">
       <CardContent className="p-4 flex-1 flex flex-col">
         {/* ヘッダー */}
         <div className="flex items-center justify-between mb-4">
