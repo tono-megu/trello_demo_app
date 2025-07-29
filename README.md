@@ -1,0 +1,2 @@
+# trello_demo_app
+TECHCAMP_AIで使用するtrello風スケジュール管理アプリです。
