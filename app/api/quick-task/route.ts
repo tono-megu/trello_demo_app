@@ -30,10 +30,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Quick task creation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create task', details: error.message },
-      { status: 500 }
-    );
-  }
+  console.error('Quick task creation error:', error);
+  // errorがErrorインスタンスか確認してからmessageを取得する
+  const details = error instanceof Error ? error.message : 'Unknown error';
+  return NextResponse.json(
+    { error: 'Failed to create task', details },
+    { status: 500 }
+  );
 }
