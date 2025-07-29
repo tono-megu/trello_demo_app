@@ -288,39 +288,41 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
 
         {/* ドロップゾーン */}
         <div
-          className="flex-1 border-2 border-dashed border-gray-200 rounded-lg p-4 bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-200 overflow-y-auto"
+          className="flex-1 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-200 flex flex-col"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="flex flex-col items-center justify-center h-full text-center p-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
               <p className="text-sm text-gray-500">タスクを読み込み中...</p>
             </div>
           ) : todayTasks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="flex flex-col items-center justify-center h-full text-center p-4">
               <Plus className="h-8 w-8 text-gray-300 mb-2" />
               <p className="text-sm text-gray-500 mb-1">今日やるタスクをここにドラッグ</p>
               <p className="text-xs text-gray-400">右側のタスク一覧からドラッグ&ドロップできます</p>
             </div>
           ) : (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext items={todayTasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
-                <div className="space-y-2">
-                  {todayTasks.map((task) => (
-                    <SortableTaskCard
-                      key={task.id}
-                      task={task}
-                      onRemove={removeTaskFromToday}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
+            <div className="flex-1 overflow-y-auto p-4">
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext items={todayTasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
+                  <div className="space-y-2">
+                    {todayTasks.map((task) => (
+                      <SortableTaskCard
+                        key={task.id}
+                        task={task}
+                        onRemove={removeTaskFromToday}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </div>
           )}
         </div>
       </CardContent>
