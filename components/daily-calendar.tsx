@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, isToday, isTomorrow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { Clock, Calendar, Plus, GripVertical } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,6 +26,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { TaskCard } from '@/lib/supabase/tasks';
+import { getTasksByIds } from '@/lib/supabase/client-tasks';
 import { generateTaskCardStyle, generateBoardBadgeStyle, generateListBadgeStyle } from '@/lib/utils/color-generator';
 
 interface TodayTask extends TaskCard {
@@ -51,6 +52,14 @@ function SortableTaskCard({ task, onRemove }: { task: TodayTask; onRemove: (task
     transform: CSS.Transform.toString(transform),
     transition,
     ...generateTaskCardStyle(task.board_title),
+  };
+
+  // 日付フォーマット関数（upcoming-tasksと同じ）
+  const formatTaskDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (isToday(date)) return '今日';
+    if (isTomorrow(date)) return '明日';
+    return format(date, 'MM/dd（E）', { locale: ja });
   };
 
   return (
@@ -81,6 +90,25 @@ function SortableTaskCard({ task, onRemove }: { task: TodayTask; onRemove: (task
               {task.description}
             </p>
           )}
+          {/* 日付と時間の表示 */}
+          {(task.due_date || task.due_time) && (
+            <div className="flex items-center gap-3 mt-2">
+              {task.due_date && (
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <Calendar className="h-3 w-3" />
+                  {formatTaskDate(task.due_date)}
+                </div>
+              )}
+              {task.due_time && (
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <Clock className="h-3 w-3" />
+                  {task.due_time}
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* バッジ表示 */}
           <div className="flex items-center gap-1.5 mt-2 flex-wrap">
             <Badge 
               variant="outline" 
@@ -94,18 +122,14 @@ function SortableTaskCard({ task, onRemove }: { task: TodayTask; onRemove: (task
             </Badge>
             <Badge 
               variant="outline" 
-              className="text-xs border truncate max-w-[100px] flex-shrink-0"
+              className="text-xs border max-w-[100px] flex-shrink-0 inline-flex items-center"
               style={generateListBadgeStyle(task.list_title)}
               title={task.list_title} // Tooltip for full text
             >
-              {task.list_title}
+              <span className="truncate text-ellipsis overflow-hidden whitespace-nowrap">
+                {task.list_title}
+              </span>
             </Badge>
-            {task.due_time && (
-              <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
-                <Clock className="h-3 w-3" />
-                <span className="whitespace-nowrap">{task.due_time}</span>
-              </div>
-            )}
           </div>
         </div>
 
@@ -125,6 +149,8 @@ function SortableTaskCard({ task, onRemove }: { task: TodayTask; onRemove: (task
 export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
   const [selectedDate] = useState(new Date());
   const [todayTasks, setTodayTasks] = useState<TodayTask[]>([]);
+  const [todayTaskIds, setTodayTaskIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ドラッグ&ドロップセンサー設定
   const sensors = useSensors(
@@ -138,22 +164,54 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
     })
   );
 
-  // ローカルストレージから今日のタスクを読み込み
+  // ローカルストレージから今日のタスクIDを読み込み、Supabaseから最新データを取得
   useEffect(() => {
-    const saved = localStorage.getItem('todayTasks');
-    if (saved) {
+    const loadTodayTasks = async () => {
+      setIsLoading(true);
       try {
-        setTodayTasks(JSON.parse(saved));
+        const saved = localStorage.getItem('todayTaskIds');
+        if (saved) {
+          const taskIds: string[] = JSON.parse(saved);
+          setTodayTaskIds(taskIds);
+          
+          if (taskIds.length > 0) {
+            const tasks = await getTasksByIds(taskIds);
+            setTodayTasks(tasks);
+          } else {
+            setTodayTasks([]);
+          }
+        } else {
+          setTodayTasks([]);
+          setTodayTaskIds([]);
+        }
       } catch (error) {
-        console.error('Failed to parse saved today tasks:', error);
+        console.error('Failed to load today tasks:', error);
+        setTodayTasks([]);
+        setTodayTaskIds([]);
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+
+    loadTodayTasks();
   }, []);
 
-  // 今日のタスクをローカルストレージに保存
-  const saveTodayTasks = (tasks: TodayTask[]) => {
-    setTodayTasks(tasks);
-    localStorage.setItem('todayTasks', JSON.stringify(tasks));
+  // 今日のタスクIDをローカルストレージに保存し、タスクデータを更新
+  const saveTodayTaskIds = async (taskIds: string[]) => {
+    setTodayTaskIds(taskIds);
+    localStorage.setItem('todayTaskIds', JSON.stringify(taskIds));
+    
+    // 最新のタスクデータを取得
+    if (taskIds.length > 0) {
+      try {
+        const tasks = await getTasksByIds(taskIds);
+        setTodayTasks(tasks);
+      } catch (error) {
+        console.error('Failed to fetch updated tasks:', error);
+      }
+    } else {
+      setTodayTasks([]);
+    }
   };
 
   // ドラッグエンドハンドラー（並び替え）
@@ -161,12 +219,12 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-      const oldIndex = todayTasks.findIndex(task => task.id === active.id);
-      const newIndex = todayTasks.findIndex(task => task.id === over?.id);
+      const oldIndex = todayTaskIds.findIndex(id => id === active.id);
+      const newIndex = todayTaskIds.findIndex(id => id === over?.id);
       
       if (oldIndex !== -1 && newIndex !== -1) {
-        const reorderedTasks = arrayMove(todayTasks, oldIndex, newIndex);
-        saveTodayTasks(reorderedTasks);
+        const reorderedIds = arrayMove(todayTaskIds, oldIndex, newIndex);
+        saveTodayTaskIds(reorderedIds);
       }
     }
   };
@@ -184,9 +242,9 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
       try {
         const task: TaskCard = JSON.parse(taskData);
         // すでに今日のタスクに追加されていないかチェック
-        if (!todayTasks.find(t => t.id === task.id)) {
-          const newTodayTasks = [...todayTasks, { ...task }];
-          saveTodayTasks(newTodayTasks);
+        if (!todayTaskIds.includes(task.id)) {
+          const newTodayTaskIds = [...todayTaskIds, task.id];
+          saveTodayTaskIds(newTodayTaskIds);
           // オプショナルなコールバック
           if (onTaskDrop) {
             onTaskDrop(task.id);
@@ -201,8 +259,8 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
 
   // タスクを今日のリストから削除
   const removeTaskFromToday = (taskId: string) => {
-    const newTodayTasks = todayTasks.filter(t => t.id !== taskId);
-    saveTodayTasks(newTodayTasks);
+    const newTodayTaskIds = todayTaskIds.filter(id => id !== taskId);
+    saveTodayTaskIds(newTodayTaskIds);
   };
 
   const formatDate = (date: Date) => {
@@ -210,8 +268,8 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
   };
 
   return (
-    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg">
-      <CardContent className="p-4">
+    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg h-[600px] flex flex-col">
+      <CardContent className="p-4 flex-1 flex flex-col">
         {/* ヘッダー */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -230,11 +288,16 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
 
         {/* ドロップゾーン */}
         <div
-          className="min-h-[300px] border-2 border-dashed border-gray-200 rounded-lg p-4 bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-200"
+          className="flex-1 border-2 border-dashed border-gray-200 rounded-lg p-4 bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-200 overflow-y-auto"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {todayTasks.length === 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+              <p className="text-sm text-gray-500">タスクを読み込み中...</p>
+            </div>
+          ) : todayTasks.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <Plus className="h-8 w-8 text-gray-300 mb-2" />
               <p className="text-sm text-gray-500 mb-1">今日やるタスクをここにドラッグ</p>

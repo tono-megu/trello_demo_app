@@ -12,7 +12,8 @@
       "Bash(telnet:*)",
       "Bash(nc:*)",
       "Bash(sudo pfctl:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

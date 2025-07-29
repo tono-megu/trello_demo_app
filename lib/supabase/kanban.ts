@@ -53,7 +53,17 @@ export class KanbanAPI {
         *,
         lists(
           *,
-          cards(*)
+          cards(
+            *,
+            card_assignees(
+              user_profiles(
+                id,
+                display_name,
+                email,
+                avatar_url
+              )
+            )
+          )
         )
       `)
       .eq('id', boardId)
@@ -61,11 +71,12 @@ export class KanbanAPI {
 
     if (error) throw error;
     
-    // due_timeの形式を確認・修正
+    // due_timeの形式を確認・修正と assigned_users情報の生成
     if (data?.lists) {
       data.lists.forEach((list: any) => {
         if (list.cards) {
           list.cards.forEach((card: any) => {
+            // due_time形式の修正
             if (card.due_time) {
               // time型の場合、HH:MM:SS形式から HH:MM形式に変換
               const timeMatch = card.due_time.match(/^(\d{2}):(\d{2})/);
@@ -74,6 +85,12 @@ export class KanbanAPI {
               }
               console.log('Card due_time processed:', card.id, card.due_time);
             }
+            
+            // assigned_users情報の生成（TaskCard型との一貫性を保つ）
+            card.assigned_users = card.card_assignees?.map((assignee: any) => assignee.user_profiles).filter(Boolean) || [];
+            card.assigned_user_name = card.assigned_users.length > 0 
+              ? card.assigned_users[0].display_name 
+              : null;
           });
         }
       });

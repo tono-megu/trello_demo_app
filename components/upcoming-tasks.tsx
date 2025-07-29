@@ -128,14 +128,14 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
 
   if (tasks.length === 0) {
     return (
-      <Card className="w-full bg-white border-0 rounded-2xl shadow-lg">
-        <CardHeader className="pb-4">
+      <Card className="w-full bg-white border-0 rounded-2xl shadow-lg h-[600px] flex flex-col">
+        <CardHeader className="pb-4 flex-shrink-0">
           <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
             直近の納期
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 overflow-y-auto">
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="animate-pulse">
@@ -150,8 +150,8 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
   }
 
   return (
-    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg">
-      <CardHeader className="pb-4">
+    <Card className="w-full bg-white border-0 rounded-2xl shadow-lg h-[600px] flex flex-col">
+      <CardHeader className="pb-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
@@ -160,7 +160,7 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
           <p className="text-xs text-gray-500">← 左にドラッグで今日のタスクに追加</p>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 flex-1 overflow-y-auto">
         {taskGroups.map((group, groupIndex) => (
           group.tasks.length > 0 && (
             <div key={groupIndex} className="space-y-3">
@@ -231,11 +231,13 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
                           </Badge>
                           <Badge 
                             variant="outline" 
-                            className="text-xs border truncate max-w-[100px] flex-shrink-0"
+                            className="text-xs border max-w-[100px] flex-shrink-0 inline-flex items-center"
                             style={generateListBadgeStyle(task.list_title)}
                             title={task.list_title}
                           >
-                            {task.list_title}
+                            <span className="truncate text-ellipsis overflow-hidden whitespace-nowrap">
+                              {task.list_title}
+                            </span>
                           </Badge>
                           {task.assigned_users && task.assigned_users.length > 0 && (
                             <div className="flex items-center gap-1">

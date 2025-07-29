@@ -1,28 +1,17 @@
-import { createClient } from './server';
+'use client';
 
-export interface TaskCard {
-  id: string;
-  title: string;
-  description?: string;
-  due_date: string;
-  due_time?: string;
-  list_title: string;
-  board_title: string;
-  board_id: string;
-  list_id: string;
-  assigned_user_id?: string | null;
-  assigned_user_ids?: string[];
-  assigned_user_name?: string | null;
-  assigned_users?: Array<{
-    id: string;
-    display_name: string;
-    email: string;
-    avatar_url?: string;
-  }>;
-}
+import { createClient } from './client';
+import type { TaskCard } from './tasks';
 
-export async function getUpcomingTasks(): Promise<TaskCard[]> {
-  const supabase = await createClient();
+/**
+ * 指定されたIDの配列に基づいてタスクを取得し、IDの順序を保持する（クライアント専用）
+ */
+export async function getTasksByIds(taskIds: string[]): Promise<TaskCard[]> {
+  if (taskIds.length === 0) {
+    return [];
+  }
+
+  const supabase = createClient();
   
   const { data, error } = await supabase
     .from('cards')
@@ -51,16 +40,17 @@ export async function getUpcomingTasks(): Promise<TaskCard[]> {
         )
       )
     `)
-    .not('due_date', 'is', null)
-    .order('due_date', { ascending: true })
-    .limit(20);
+    .in('id', taskIds);
 
   if (error) {
-    console.error('Error fetching upcoming tasks:', error);
+    console.error('Error fetching tasks by IDs:', error);
     return [];
   }
 
-  return data?.map((card: any) => {
+  // データを受け取った後、IDの順序に従って並び替える
+  const taskMap = new Map<string, TaskCard>();
+  
+  data?.forEach((card: any) => {
     // due_time形式の統一（HH:MM:SS → HH:MM）
     let formattedDueTime = card.due_time;
     if (formattedDueTime) {
@@ -70,7 +60,7 @@ export async function getUpcomingTasks(): Promise<TaskCard[]> {
       }
     }
     
-    return {
+    taskMap.set(card.id, {
       id: card.id,
       title: card.title,
       description: card.description,
@@ -86,6 +76,11 @@ export async function getUpcomingTasks(): Promise<TaskCard[]> {
       assigned_user_name: card.card_assignees?.length > 0 
         ? card.card_assignees[0].user_profiles?.display_name 
         : null
-    };
-  }) || [];
+    });
+  });
+
+  // IDの順序に従って結果を並び替え（存在しないIDは除外）
+  return taskIds
+    .map(id => taskMap.get(id))
+    .filter((task): task is TaskCard => task !== undefined);
 }
