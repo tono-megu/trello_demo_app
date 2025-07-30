@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Sparkles, Shield } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export function UpdatePasswordForm({
@@ -25,28 +25,57 @@ export function UpdatePasswordForm({
   const [isLoading, setIsLoading] = useState(false);
   const [sessionChecked, setSessionChecked] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // コンポーネントマウント時にセッション状態を確認
+  // コンポーネントマウント時にURLパラメータからセッションを確立
   useEffect(() => {
-    const checkSession = async () => {
+    const establishSession = async () => {
       const supabase = createClient();
       
-      // 少し待ってからセッション確認（リダイレクト後の処理を考慮）
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // URLパラメータからtoken_hashとtypeを取得
+      const token_hash = searchParams.get('token_hash');
+      const type = searchParams.get('type');
       
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      console.log("URL params:", { token_hash, type });
       
-      console.log("Session check:", { sessionData, sessionError });
-      
-      if (sessionError || !sessionData.session) {
-        console.error("No session found:", sessionError);
-        setError("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
+      if (token_hash && type) {
+        try {
+          // OTPを検証してセッションを確立
+          const { data, error } = await supabase.auth.verifyOtp({
+            type: type as any,
+            token_hash,
+          });
+          
+          console.log("OTP verification result:", { data, error });
+          
+          if (error) {
+            console.error("OTP verification failed:", error);
+            setError("パスワード再設定リンクが無効または期限切れです。再度お試しください。");
+          } else if (data?.user) {
+            console.log("Session established successfully");
+            // セッション確立成功
+          }
+        } catch (err) {
+          console.error("Session establishment error:", err);
+          setError("認証エラーが発生しました。再度お試しください。");
+        }
+      } else {
+        // URLパラメータがない場合はセッションを確認
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        
+        console.log("Session check:", { sessionData, sessionError });
+        
+        if (sessionError || !sessionData.session) {
+          console.error("No session found:", sessionError);
+          setError("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
+        }
       }
+      
       setSessionChecked(true);
     };
 
-    checkSession();
-  }, []);
+    establishSession();
+  }, [searchParams]);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -4,12 +4,10 @@ import { NextResponse } from "next/server";
 import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+  const { searchParams, origin } = new URL(request.url);
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next");
-
-  const redirectTo = new URL("/auth/error", request.url);
 
   if (token_hash && type) {
     const supabase = await createClient();
@@ -19,23 +17,35 @@ export async function GET(request: NextRequest) {
       token_hash,
     });
 
-    if (!error && data?.user && data?.session) {
+    if (!error && data?.user) {
       // パスワードリセットの場合はupdate-passwordページに、その他は指定されたURLまたはprotectedページに
+      let redirectPath = "/protected";
       if (type === "recovery") {
-        redirectTo.pathname = "/auth/update-password";
+        redirectPath = "/auth/update-password";
       } else if (next) {
-        redirectTo.pathname = next;
+        redirectPath = next;
+      }
+
+      // 本番環境とローカル環境を考慮したリダイレクト
+      const forwardedHost = request.headers.get("x-forwarded-host");
+      const isLocalEnv = process.env.NODE_ENV === "development";
+      
+      if (isLocalEnv) {
+        return NextResponse.redirect(`${origin}${redirectPath}`);
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${redirectPath}`);
       } else {
-        redirectTo.pathname = "/protected";
+        return NextResponse.redirect(`${origin}${redirectPath}`);
       }
     } else {
       // redirect the user to an error page with some instructions
-      redirectTo.searchParams.set("error", error?.message || 'Token verification failed');
+      const errorMessage = error?.message || 'Token verification failed';
+      console.error("OTP verification failed:", errorMessage);
+      return NextResponse.redirect(`${origin}/auth/error?error=${encodeURIComponent(errorMessage)}`);
     }
-  } else {
-    // redirect the user to an error page with some instructions
-    redirectTo.searchParams.set("error", "No token hash or type");
   }
 
-  return NextResponse.redirect(redirectTo);
+  // redirect the user to an error page with some instructions
+  console.error("Missing token_hash or type parameters");
+  return NextResponse.redirect(`${origin}/auth/error?error=${encodeURIComponent("Invalid reset link")}`);
 }
