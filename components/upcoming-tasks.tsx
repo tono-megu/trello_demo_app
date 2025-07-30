@@ -130,8 +130,8 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
     return (
       <Card className="w-full bg-white border-0 rounded-2xl shadow-lg min-h-[600px] flex flex-col">
         <CardHeader className="pb-4 flex-shrink-0">
-          <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-500" />
+          <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-blue-600" />
             直近の納期
           </CardTitle>
         </CardHeader>
@@ -153,11 +153,11 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
     <Card className="w-full bg-white border-0 rounded-2xl shadow-lg min-h-[600px] flex flex-col">
       <CardHeader className="pb-4 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-500" />
+          <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-blue-600" />
             直近の納期
           </CardTitle>
-          <p className="text-xs text-gray-500">← 左にドラッグで今日のタスクに追加</p>
+          <p className="text-xs text-slate-500">← 左にドラッグで今日のタスクに追加</p>
         </div>
       </CardHeader>
       <CardContent className="space-y-6 flex-1 overflow-y-auto">
@@ -263,8 +263,8 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
         ))}
         
         {taskGroups.every(group => group.tasks.length === 0) && (
-          <div className="text-center py-8 text-gray-500">
-            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+          <div className="text-center py-8 text-slate-500">
+            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-slate-300" />
             <p className="text-sm">直近の納期はありません</p>
           </div>
         )}

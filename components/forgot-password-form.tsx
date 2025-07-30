@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { KeyRound, Sparkles, Mail, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -47,53 +48,95 @@ export function ForgotPasswordForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       {success ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
-            <CardDescription>Password reset instructions sent</CardDescription>
+        <Card className="bg-white border-0 rounded-2xl shadow-2xl overflow-hidden">
+          <CardHeader className="text-center bg-gradient-to-r from-green-50 to-blue-50 pb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-3 bg-green-600 rounded-xl shadow-lg">
+                <CheckCircle className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-3xl font-bold text-slate-800">
+                メール送信完了
+              </CardTitle>
+              <Sparkles className="h-6 w-6 text-green-500" />
+            </div>
+            <CardDescription className="text-slate-600 text-lg font-medium">
+              🎯 パスワード再設定メールを送信しました！
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              If you registered using your email and password, you will receive
-              a password reset email.
+          <CardContent className="p-8 text-center">
+            <p className="text-sm text-slate-600 leading-relaxed mb-6">
+              📧 メールアドレスとパスワードで登録されている場合、<br />
+              パスワード再設定用のメールが届きます。<br />
+              メール内のリンクをクリックして、新しいパスワードを設定してください。
             </p>
+            <Link
+              href="/auth/login"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors"
+            >
+              <Sparkles className="h-4 w-4" />
+              🎯 ログインページに戻る
+            </Link>
           </CardContent>
         </Card>
       ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-            <CardDescription>
-              Type in your email and we&apos;ll send you a link to reset your
-              password
+        <Card className="bg-white border-0 rounded-2xl shadow-2xl overflow-hidden">
+          <CardHeader className="text-center bg-gradient-to-r from-blue-50 to-slate-50 pb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-3 bg-blue-600 rounded-xl shadow-lg">
+                <KeyRound className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-3xl font-bold text-slate-800">
+                パスワード再設定
+              </CardTitle>
+              <Sparkles className="h-6 w-6 text-blue-500" />
+            </div>
+            <CardDescription className="text-slate-600 text-lg font-medium">
+              🔑 メールアドレスを入力して、パスワード再設定リンクを受け取りましょう！
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleForgotPassword}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset email"}
-                </Button>
+          <CardContent className="p-8">
+            <form onSubmit={handleForgotPassword} className="space-y-6">
+              <div>
+                <Label htmlFor="email" className="text-sm font-bold text-slate-700 flex items-center gap-2 mb-3">
+                  <Mail className="h-4 w-4" />
+                  📧 メールアドレス
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="border-2 border-blue-200 focus:border-blue-400 rounded-xl bg-slate-50 p-3 text-base"
+                />
               </div>
-              <div className="mt-4 text-center text-sm">
-                Already have an account?{" "}
+              
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-sm text-red-600 font-medium">❌ {error}</p>
+                </div>
+              )}
+              
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" 
+                disabled={isLoading}
+              >
+                <KeyRound className="h-5 w-5 mr-2" />
+                {isLoading ? "送信中..." : "🚀 再設定メールを送信"}
+              </Button>
+              
+              <div className="text-center pt-4 border-t border-gray-100">
+                <p className="text-sm text-slate-600 mb-2">
+                  アカウントをお持ちの方
+                </p>
                 <Link
                   href="/auth/login"
-                  className="underline underline-offset-4"
+                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors"
                 >
-                  Login
+                  <Sparkles className="h-4 w-4" />
+                  🎯 ログイン
                 </Link>
               </div>
             </form>

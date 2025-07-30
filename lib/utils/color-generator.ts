@@ -60,7 +60,7 @@ export function generateListColor(listName: string): {
 }
 
 /**
- * タスクカード用の色を生成（ボード名ベース）
+ * タスクカード用の色を生成（ボード名ベース）- 無彩色版
  */
 export function generateTaskCardColor(boardName: string): {
   background: string;
@@ -68,12 +68,13 @@ export function generateTaskCardColor(boardName: string): {
   accent: string;
 } {
   const hash = stringToHash(boardName);
-  const { h, s, l } = hashToHSL(hash);
+  // 無彩色（グレースケール）での変化を作るため、明度のみを使用
+  const lightness = 45 + (hash % 20); // 45-65%の範囲
   
   return {
-    background: `hsl(${h}, ${Math.max(s - 40, 10)}%, 97%)`, // 非常に薄い背景
-    border: `hsl(${h}, ${Math.max(s - 20, 20)}%, ${Math.max(l + 10, 70)}%)`, // 薄いボーダー
-    accent: `hsl(${h}, ${s}%, ${l}%)` // アクセントカラー
+    background: `hsl(0, 0%, 98%)`, // 非常に薄いグレー背景
+    border: `hsl(0, 0%, ${Math.max(lightness + 15, 75)}%)`, // 薄いグレーボーダー
+    accent: `hsl(0, 0%, ${Math.max(lightness - 10, 35)}%)` // ダークグレーアクセント
   };
 }
 

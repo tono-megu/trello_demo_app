@@ -273,12 +273,12 @@ export function DailyCalendar({ onTaskDrop }: DailyCalendarProps) {
         {/* ヘッダー */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg">
+            <div className="p-2 bg-blue-600 rounded-lg">
               <Calendar className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-800">今日のタスク</h3>
-              <p className="text-xs text-gray-500">{formatDate(selectedDate)}</p>
+              <h3 className="font-bold text-slate-800">今日のタスク</h3>
+              <p className="text-xs text-slate-500">{formatDate(selectedDate)}</p>
             </div>
           </div>
           <Badge variant="secondary" className="text-xs">

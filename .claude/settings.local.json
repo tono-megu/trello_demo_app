@@ -13,7 +13,9 @@
       "Bash(nc:*)",
       "Bash(sudo pfctl:*)",
       "Bash(npx tsc:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

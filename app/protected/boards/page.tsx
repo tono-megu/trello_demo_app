@@ -93,7 +93,7 @@ export default function BoardsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <div className="w-full px-6 py-8">
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-6">
@@ -101,29 +101,29 @@ export default function BoardsPage() {
               variant="outline"
               size="sm"
               onClick={() => router.push('/protected')}
-              className="flex items-center gap-2 hover:bg-blue-50 border-blue-200 text-blue-700 hover:border-blue-300 transition-all duration-200"
+              className="flex items-center gap-2 hover:bg-blue-50 border-blue-300 text-blue-600 hover:border-blue-400 transition-all duration-200"
             >
               <Home className="h-4 w-4" />
               ホーム
             </Button>
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+                <div className="p-2 bg-blue-600 rounded-lg">
                   <FolderOpen className="h-6 w-6 text-white" />
                 </div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-slate-800">
                   マイボード
                 </h1>
-                <Sparkles className="h-5 w-5 text-yellow-500" />
+                <Sparkles className="h-5 w-5 text-blue-500" />
               </div>
-              <p className="text-gray-600 text-lg font-medium">
+              <p className="text-slate-600 text-lg font-medium">
                 🚀 プロジェクトを整理して、夢を実現しましょう！
               </p>
             </div>
           </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
               <Plus className="h-5 w-5 mr-2" />
               ✨ 新しいボードを作成
             </Button>
@@ -190,7 +190,7 @@ export default function BoardsPage() {
             </p>
             <Button 
               onClick={() => setIsCreateDialogOpen(true)}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
             >
               <Plus className="h-5 w-5 mr-2" />
               🚀 最初のボードを作成
