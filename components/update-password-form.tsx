@@ -13,8 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Sparkles, Shield } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function UpdatePasswordForm({
   className,
@@ -23,59 +23,7 @@ export function UpdatePasswordForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionChecked, setSessionChecked] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // コンポーネントマウント時にURLパラメータからセッションを確立
-  useEffect(() => {
-    const establishSession = async () => {
-      const supabase = createClient();
-      
-      // URLパラメータからtoken_hashとtypeを取得
-      const token_hash = searchParams.get('token_hash');
-      const type = searchParams.get('type');
-      
-      console.log("URL params:", { token_hash, type });
-      
-      if (token_hash && type) {
-        try {
-          // OTPを検証してセッションを確立
-          const { data, error } = await supabase.auth.verifyOtp({
-            type: type as any,
-            token_hash,
-          });
-          
-          console.log("OTP verification result:", { data, error });
-          
-          if (error) {
-            console.error("OTP verification failed:", error);
-            setError("パスワード再設定リンクが無効または期限切れです。再度お試しください。");
-          } else if (data?.user) {
-            console.log("Session established successfully");
-            // セッション確立成功
-          }
-        } catch (err) {
-          console.error("Session establishment error:", err);
-          setError("認証エラーが発生しました。再度お試しください。");
-        }
-      } else {
-        // URLパラメータがない場合はセッションを確認
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        
-        console.log("Session check:", { sessionData, sessionError });
-        
-        if (sessionError || !sessionData.session) {
-          console.error("No session found:", sessionError);
-          setError("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
-        }
-      }
-      
-      setSessionChecked(true);
-    };
-
-    establishSession();
-  }, [searchParams]);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,22 +69,6 @@ export function UpdatePasswordForm({
       setIsLoading(false);
     }
   };
-
-  // セッションチェック中はローディング表示
-  if (!sessionChecked) {
-    return (
-      <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <Card className="bg-white border-0 rounded-2xl shadow-2xl overflow-hidden">
-          <CardContent className="p-8 text-center">
-            <div className="flex flex-col items-center gap-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <p className="text-slate-600">セッションを確認中...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
