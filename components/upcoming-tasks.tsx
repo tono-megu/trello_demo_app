@@ -178,8 +178,7 @@ export function UpcomingTasks({ initialTasks }: UpcomingTasksProps) {
                 {group.tasks.map((task) => (
                   <div
                     key={task.id}
-                    className="p-3 border rounded-lg hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing select-none"
-                    style={generateTaskCardStyle(task.board_title)}
+                    className="p-3 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing select-none"
                     draggable
                     onDragStart={(e) => {
                       e.dataTransfer.setData('application/json', JSON.stringify(task));

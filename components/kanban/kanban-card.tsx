@@ -93,17 +93,6 @@ export function KanbanCard({ card, onEdit, onDelete }: KanbanCardProps) {
     transition,
   };
 
-  const cardColors = [
-    'from-pink-100 to-rose-100 border-pink-200',
-    'from-blue-100 to-cyan-100 border-blue-200', 
-    'from-green-100 to-emerald-100 border-green-200',
-    'from-purple-100 to-violet-100 border-purple-200',
-    'from-yellow-100 to-orange-100 border-yellow-200',
-    'from-indigo-100 to-blue-100 border-indigo-200'
-  ];
-  
-  const colorIndex = parseInt(card.id.slice(-1), 16) % cardColors.length;
-  const cardColorClass = cardColors[colorIndex];
 
   return (
     <div
@@ -113,7 +102,7 @@ export function KanbanCard({ card, onEdit, onDelete }: KanbanCardProps) {
       {...listeners}
       className={`mb-3 ${isDragging ? 'opacity-50 scale-105 rotate-2' : ''} transition-all duration-200`}
     >
-      <UICard className={`cursor-grab hover:shadow-lg transition-all duration-300 group bg-gradient-to-br ${cardColorClass} border-2 rounded-xl hover:scale-105 hover:-rotate-1`}>
+      <UICard className="cursor-grab hover:shadow-lg transition-all duration-300 group bg-white border border-gray-200 rounded-xl hover:scale-105 hover:-rotate-1">
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">

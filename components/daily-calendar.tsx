@@ -51,7 +51,6 @@ function SortableTaskCard({ task, onRemove }: { task: TodayTask; onRemove: (task
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    ...generateTaskCardStyle(task.board_title),
   };
 
   // 日付フォーマット関数（upcoming-tasksと同じ）
@@ -66,7 +65,7 @@ function SortableTaskCard({ task, onRemove }: { task: TodayTask; onRemove: (task
     <div
       ref={setNodeRef}
       style={style}
-      className={`p-3 border rounded-lg shadow-sm hover:shadow-md transition-shadow group ${
+      className={`p-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group ${
         isDragging ? 'opacity-50' : ''
       }`}
     >
