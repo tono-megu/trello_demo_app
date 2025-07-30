@@ -270,8 +270,9 @@ export default function BoardsPage() {
             </Card>
           ))}
           </div>
+          </div>
+        )}
         </div>
-      )}
       </div>
     </div>
   );
