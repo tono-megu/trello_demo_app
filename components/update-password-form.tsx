@@ -30,9 +30,16 @@ export function UpdatePasswordForm({
   useEffect(() => {
     const checkSession = async () => {
       const supabase = createClient();
+      
+      // 少し待ってからセッション確認（リダイレクト後の処理を考慮）
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       
+      console.log("Session check:", { sessionData, sessionError });
+      
       if (sessionError || !sessionData.session) {
+        console.error("No session found:", sessionError);
         setError("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
       }
       setSessionChecked(true);
@@ -48,26 +55,39 @@ export function UpdatePasswordForm({
     setError(null);
 
     try {
-      // まず現在のセッションを確認
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      console.log("Starting password update...");
       
-      if (sessionError || !sessionData.session) {
-        throw new Error("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
+      // 現在のユーザー情報を取得
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      console.log("User data:", { userData, userError });
+      
+      if (userError || !userData.user) {
+        throw new Error("認証が必要です。パスワード再設定リンクを再度お試しください。");
       }
 
       // パスワードを更新
-      const { error: updateError } = await supabase.auth.updateUser({ 
+      console.log("Updating password...");
+      const { data: updateData, error: updateError } = await supabase.auth.updateUser({ 
         password: password 
       });
       
-      if (updateError) throw updateError;
+      console.log("Update result:", { updateData, updateError });
+      
+      if (updateError) {
+        console.error("Update error:", updateError);
+        throw updateError;
+      }
       
       // 成功メッセージを表示してからリダイレクト
       alert("パスワードが正常に更新されました！");
       router.push("/protected");
     } catch (error: unknown) {
       console.error("Password update error:", error);
-      setError(error instanceof Error ? error.message : "パスワードの更新に失敗しました");
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("パスワードの更新に失敗しました");
+      }
     } finally {
       setIsLoading(false);
     }
