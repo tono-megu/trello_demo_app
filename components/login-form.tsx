@@ -42,7 +42,13 @@ export function LoginForm({
       // Update this route to redirect to an authenticated route. The user already has an active session.
       router.push("/protected");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      const errorMessage = error instanceof Error ? error.message : "An error occurred";
+      // Supabaseの英語エラーメッセージを日本語に変換
+      if (errorMessage === "Invalid login credentials") {
+        setError("登録されていないメールアドレスです");
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

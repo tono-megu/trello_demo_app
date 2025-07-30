@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       if (type === "recovery") {
         redirectPath = "/auth/update-password";
       } else if (type === "signup") {
-        redirectPath = "/";
+        redirectPath = "/auth/login";
       } else if (next) {
         redirectPath = next;
       }
