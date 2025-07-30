@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Sparkles, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function UpdatePasswordForm({
   className,
@@ -23,25 +23,71 @@ export function UpdatePasswordForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionChecked, setSessionChecked] = useState(false);
   const router = useRouter();
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  // コンポーネントマウント時にセッション状態を確認
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClient();
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        setError("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
+      }
+      setSessionChecked(true);
+    };
+
+    checkSession();
+  }, []);
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     const supabase = createClient();
     setIsLoading(true);
     setError(null);
 
     try {
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
+      // まず現在のセッションを確認
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        throw new Error("認証セッションが見つかりません。パスワード再設定リンクを再度お試しください。");
+      }
+
+      // パスワードを更新
+      const { error: updateError } = await supabase.auth.updateUser({ 
+        password: password 
+      });
+      
+      if (updateError) throw updateError;
+      
+      // 成功メッセージを表示してからリダイレクト
+      alert("パスワードが正常に更新されました！");
       router.push("/protected");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      console.error("Password update error:", error);
+      setError(error instanceof Error ? error.message : "パスワードの更新に失敗しました");
     } finally {
       setIsLoading(false);
     }
   };
+
+  // セッションチェック中はローディング表示
+  if (!sessionChecked) {
+    return (
+      <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <Card className="bg-white border-0 rounded-2xl shadow-2xl overflow-hidden">
+          <CardContent className="p-8 text-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="text-slate-600">セッションを確認中...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -61,7 +107,7 @@ export function UpdatePasswordForm({
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
-          <form onSubmit={handleForgotPassword} className="space-y-6">
+          <form onSubmit={handleUpdatePassword} className="space-y-6">
             <div>
               <Label htmlFor="password" className="text-sm font-bold text-slate-700 flex items-center gap-2 mb-3">
                 <Lock className="h-4 w-4" />
