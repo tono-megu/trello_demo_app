@@ -18,10 +18,12 @@ export async function GET(request: NextRequest) {
     });
 
     if (!error && data?.user) {
-      // パスワードリセットの場合はupdate-passwordページに、その他は指定されたURLまたはprotectedページに
+      // パスワードリセットの場合はupdate-passwordページに、メール認証の場合はログインページに、その他は指定されたURLまたはprotectedページに
       let redirectPath = "/protected";
       if (type === "recovery") {
         redirectPath = "/auth/update-password";
+      } else if (type === "signup") {
+        redirectPath = "/";
       } else if (next) {
         redirectPath = next;
       }
