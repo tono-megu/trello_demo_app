@@ -16,6 +16,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { KanbanAPI } from '@/lib/supabase/kanban';
 import type { Board } from '@/lib/types/kanban';
+import { LayoutWrapper } from '@/app/layout-wrapper';
 
 export default function BoardsPage() {
   const router = useRouter();
@@ -93,9 +94,10 @@ export default function BoardsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      <div className="w-full px-6 py-8">
-        <div className="max-w-7xl mx-auto">
+    <LayoutWrapper>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+        <div className="w-full px-6 py-8">
+          <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-6">
             <div>
@@ -215,7 +217,7 @@ export default function BoardsPage() {
                      e.target.closest('[data-radix-dropdown-menu-trigger]'))) {
                   return;
                 }
-                router.push(`/protected/boards/${board.id}`);
+                router.push(`/boards/${board.id}`);
               }}
             >
               <CardHeader className="pb-2">
@@ -274,6 +276,6 @@ export default function BoardsPage() {
         )}
         </div>
       </div>
-    </div>
+    </LayoutWrapper>
   );
 }

@@ -229,7 +229,7 @@ export function KanbanBoard({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => router.push('/protected')}
+              onClick={() => router.push('/')}
               className="flex items-center gap-2 hover:bg-blue-50 border-blue-200 text-blue-700 hover:border-blue-300 transition-all duration-200"
             >
               <Home className="h-4 w-4" />
@@ -238,7 +238,7 @@ export function KanbanBoard({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => router.push('/protected/boards')}
+              onClick={() => router.push('/boards')}
               className="flex items-center gap-2 hover:bg-purple-50 border-purple-200 text-purple-700 hover:border-purple-300 transition-all duration-200"
             >
               <ArrowLeft className="h-4 w-4" />

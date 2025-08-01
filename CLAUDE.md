@@ -31,8 +31,9 @@ This is a Next.js 15 application with Supabase authentication using the App Rout
 
 - **Route Protection**: 
   - `middleware.ts` runs on all routes except static assets
-  - Protected routes are in `app/protected/` directory
+  - Protected routes are at root level (`/` and `/boards/`)
   - Auth pages are in `app/auth/` directory
+  - About/landing page for unauthenticated users is at `/about`
 
 - **UI Components**: 
   - Built with shadcn/ui components in `components/ui/`
@@ -57,8 +58,10 @@ This application includes a full-featured Trello-like kanban board system:
 - **CRUD Operations**: Full API routes in `/api/boards`, `/api/lists`, `/api/cards`
 
 #### Key Pages
-- `/protected/boards` - Board listing and creation
-- `/protected/boards/[boardId]` - Individual board with kanban interface
+- `/` - Main dashboard for authenticated users
+- `/boards` - Board listing and creation
+- `/boards/[boardId]` - Individual board with kanban interface
+- `/about` - Landing page for unauthenticated users
 
 #### Components Structure
 - `components/kanban/kanban-board.tsx` - Main board container with DnD context

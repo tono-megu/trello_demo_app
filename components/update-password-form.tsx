@@ -57,7 +57,7 @@ export function UpdatePasswordForm({
       
       // 成功メッセージを表示してからリダイレクト
       alert("パスワードが正常に更新されました！");
-      router.push("/protected");
+      router.push("/");
     } catch (error: unknown) {
       console.error("Password update error:", error);
       if (error instanceof Error) {

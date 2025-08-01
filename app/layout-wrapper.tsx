@@ -1,3 +1,5 @@
+"use client";
+
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -5,7 +7,7 @@ import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Trello, Home, FolderOpen } from "lucide-react";
 
-export default function ProtectedLayout({
+export function LayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
@@ -17,7 +19,7 @@ export default function ProtectedLayout({
           <div className="w-full max-w-7xl flex justify-between items-center px-6 py-3">
             {/* ロゴ・ブランディングエリア */}
             <div className="flex items-center gap-6">
-              <Link href="/protected" className="flex items-center gap-3 text-white hover:text-blue-100 transition-colors">
+              <Link href="/" className="flex items-center gap-3 text-white hover:text-blue-100 transition-colors">
                 <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
                   <Trello className="h-6 w-6" />
                 </div>
@@ -27,14 +29,14 @@ export default function ProtectedLayout({
               {/* ナビゲーションメニュー */}
               <div className="hidden md:flex items-center gap-4">
                 <Link 
-                  href="/protected" 
+                  href="/" 
                   className="flex items-center gap-2 px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                 >
                   <Home className="h-4 w-4" />
                   <span className="text-sm font-medium">ホーム</span>
                 </Link>
                 <Link 
-                  href="/protected/boards" 
+                  href="/boards" 
                   className="flex items-center gap-2 px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
                 >
                   <FolderOpen className="h-4 w-4" />
