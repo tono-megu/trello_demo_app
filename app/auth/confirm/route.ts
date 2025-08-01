@@ -18,12 +18,13 @@ export async function GET(request: NextRequest) {
     });
 
     if (!error && data?.user) {
-      // パスワードリセットの場合はupdate-passwordページに、メール認証の場合はログインページに、その他は指定されたURLまたはprotectedページに
+      // パスワードリセットの場合はupdate-passwordページに、その他は指定されたURLまたはホームページに
       let redirectPath = "/";
       if (type === "recovery") {
         redirectPath = "/auth/update-password";
       } else if (type === "signup") {
-        redirectPath = "/auth/login?verified=true";
+        // メール認証は無効化されているため、直接ホームページにリダイレクト
+        redirectPath = "/";
       } else if (next) {
         redirectPath = next;
       }

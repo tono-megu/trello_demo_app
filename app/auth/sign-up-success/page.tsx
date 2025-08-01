@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle, Sparkles, Mail } from "lucide-react";
+import { CheckCircle, Sparkles, Home } from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
@@ -24,35 +24,34 @@ export default function Page() {
               <Sparkles className="h-6 w-6 text-green-500" />
             </div>
             <CardDescription className="text-slate-600 text-lg font-medium">
-              🎉 アカウント登録ありがとうございます！
+              🎉 アカウント登録が完了しました！
             </CardDescription>
           </CardHeader>
           <CardContent className="p-8 text-center">
             <div className="mb-6">
               <div className="mx-auto w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mb-4">
-                <Mail className="h-8 w-8 text-blue-600" />
+                <Home className="h-8 w-8 text-blue-600" />
               </div>
-              <div className="text-6xl mb-4">📧</div>
+              <div className="text-6xl mb-4">🚀</div>
             </div>
             
             <p className="text-sm text-slate-600 leading-relaxed mb-6">
-              📨 メールアドレスに確認メールを送信しました。<br />
-              メール内のリンクをクリックして、<br />
-              アカウントを有効化してください。
+              ✨ アカウントが正常に作成されました！<br />
+              すぐにプロジェクト管理を始めることができます。
             </p>
             
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
               <p className="text-xs text-blue-700 font-medium">
-                💡 メールが届かない場合は、迷惑メールフォルダもご確認ください
+                💡 メール確認は不要です。すぐにご利用いただけます！
               </p>
             </div>
             
             <Link
-              href="/auth/login"
+              href="/"
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
             >
               <Sparkles className="h-4 w-4" />
-              🎯 ログインページに戻る
+              🎯 ホームに移動
             </Link>
           </CardContent>
         </Card>

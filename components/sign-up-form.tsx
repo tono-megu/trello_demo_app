@@ -44,12 +44,10 @@ export function SignUpForm({
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/login`,
-        },
       });
       if (error) throw error;
-      router.push("/auth/sign-up-success");
+      // メール認証不要なので直接ホームページにリダイレクト
+      router.push("/");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
