@@ -155,7 +155,7 @@ export function CardEditDialog({ card, isOpen, onClose, onSave, onMoveToBoard, c
               <FileText className="h-5 w-5 text-white" />
             </div>
             <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              ✨ カードを編集
+              カードを編集
             </DialogTitle>
             <Sparkles className="h-5 w-5 text-yellow-500" />
           </div>
@@ -172,7 +172,7 @@ export function CardEditDialog({ card, isOpen, onClose, onSave, onMoveToBoard, c
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="✨ カードのタイトルを入力..."
+              placeholder="カードのタイトルを入力..."
               className="border-2 border-blue-200 focus:border-blue-400 rounded-xl bg-white/80 p-3 text-base"
             />
           </div>

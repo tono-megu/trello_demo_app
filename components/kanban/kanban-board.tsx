@@ -258,7 +258,7 @@ export function KanbanBoard({
                 value={editBoardDescription}
                 onChange={(e) => setEditBoardDescription(e.target.value)}
                 className="border-2 border-purple-200 focus:border-purple-400 rounded-xl p-4 bg-purple-50/50 resize-none"
-                placeholder="✨ ボードの説明..."
+                placeholder="ボードの説明..."
                 rows={2}
               />
               <div className="flex gap-3">
@@ -344,7 +344,7 @@ export function KanbanBoard({
                     onClick={handleAddList}
                     className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex-1"
                   >
-                    ✨ 追加
+                    追加
                   </Button>
                   <Button
                     size="sm"

@@ -45,7 +45,7 @@ export default async function ProtectedPage() {
               <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
                 <Link href="/boards">
                   <Trello className="h-5 w-5 mr-2" />
-                  ✨ ボード一覧を見る
+                  ボード一覧を見る
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>

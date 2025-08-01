@@ -162,7 +162,7 @@ export function KanbanList({ list, onAddCard, onEditCard, onDeleteCard, onUpdate
                   onClick={handleAddCard}
                   className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex-1"
                 >
-                  ✨ 追加
+                  追加
                 </Button>
                 <Button
                   size="sm"

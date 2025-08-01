@@ -102,7 +102,7 @@ export function QuickTaskDialog({ isOpen, onClose, onCreateTask }: QuickTaskDial
               <Plus className="h-5 w-5 text-white" />
             </div>
             <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              ✨ クイックタスク作成
+              クイックタスク作成
             </DialogTitle>
             <Sparkles className="h-5 w-5 text-yellow-500" />
           </div>
@@ -121,7 +121,7 @@ export function QuickTaskDialog({ isOpen, onClose, onCreateTask }: QuickTaskDial
               id="quickTitle"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="✨ やることを入力..."
+              placeholder="やることを入力..."
               className="border-2 border-green-200 focus:border-green-400 rounded-xl bg-white/80 p-3 text-base"
               autoFocus
             />

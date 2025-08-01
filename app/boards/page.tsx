@@ -119,7 +119,7 @@ export default function BoardsPage() {
                 <DialogTrigger asChild>
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
                     <Plus className="h-5 w-5 mr-2" />
-                    ✨ 新しいボードを作成
+                    新しいボードを作成
                   </Button>
                 </DialogTrigger>
                 <DialogContent>

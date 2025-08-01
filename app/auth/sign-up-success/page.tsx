@@ -36,7 +36,7 @@ export default function Page() {
             </div>
             
             <p className="text-sm text-slate-600 leading-relaxed mb-6">
-              ✨ アカウントが正常に作成されました！<br />
+              アカウントが正常に作成されました！<br />
               すぐにプロジェクト管理を始めることができます。
             </p>
             

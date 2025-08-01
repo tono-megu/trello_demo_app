@@ -69,7 +69,7 @@ export function SignUpForm({
             <Sparkles className="h-6 w-6 text-blue-500" />
           </div>
           <CardDescription className="text-slate-600 text-lg font-medium">
-            ✨ 新しいアカウントを作成して、プロジェクト管理を始めましょう！
+            新しいアカウントを作成して、プロジェクト管理を始めましょう！
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
