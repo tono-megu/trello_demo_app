@@ -1,16 +1,25 @@
+'use client';
+
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import { LogoutButton } from "./logout-button";
 import { User } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
-export async function AuthButton() {
-  const supabase = await createClient();
+export function AuthButton() {
+  const [user, setUser] = useState<SupabaseUser | null>(null);
 
-  // You can also use getUser() which will be slower.
-  const { data } = await supabase.auth.getClaims();
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
 
-  const user = data?.claims;
+    fetchUser();
+  }, []);
 
   return user ? (
     <div className="flex items-center gap-3">
