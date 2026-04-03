@@ -100,9 +100,9 @@ export function KanbanCard({ card, onEdit, onDelete }: KanbanCardProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`mb-3 ${isDragging ? 'opacity-50 scale-105 rotate-2' : ''} transition-all duration-200`}
+      className={`mb-3 ${isDragging ? 'opacity-30 z-50' : ''} transition-transform duration-200`}
     >
-      <UICard className="cursor-grab hover:shadow-lg transition-all duration-300 group bg-white border border-gray-200 rounded-xl hover:scale-105 hover:-rotate-1">
+      <UICard className={`cursor-grab hover:shadow-lg transition-shadow duration-200 group bg-white border border-gray-200 rounded-xl ${isDragging ? '' : 'hover:border-blue-300'}`}>
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">

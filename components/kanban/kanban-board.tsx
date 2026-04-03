@@ -374,9 +374,9 @@ export function KanbanBoard({
           </div>
         </div>
 
-        <DragOverlay>
+        <DragOverlay dropAnimation={null}>
           {activeCard && (
-            <div className="rotate-2">
+            <div className="rotate-3 scale-105 opacity-90 shadow-2xl">
               <KanbanCard card={activeCard} />
             </div>
           )}
