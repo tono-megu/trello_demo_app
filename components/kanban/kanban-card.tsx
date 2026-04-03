@@ -90,7 +90,7 @@ export function KanbanCard({ card, onEdit, onDelete }: KanbanCardProps) {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition,
   };
 
 
